@@ -62,7 +62,7 @@ public class TypeScriptFetchModelTest {
 
         final CodegenProperty property3 = cm.vars.get(2);
         Assert.assertEquals(property3.baseName, "createdAt");
-        Assert.assertEquals(property3.complexType, null);
+        Assert.assertNull(property3.complexType);
         Assert.assertEquals(property3.datatype, "Date");
         Assert.assertEquals(property3.name, "createdAt");
         Assert.assertEquals(property3.defaultValue, "undefined");
@@ -72,7 +72,7 @@ public class TypeScriptFetchModelTest {
 
         final CodegenProperty property4 = cm.vars.get(3);
         Assert.assertEquals(property4.baseName, "birthDate");
-        Assert.assertEquals(property4.complexType, null);
+        Assert.assertNull(property4.complexType);
         Assert.assertEquals(property4.datatype, "string");
         Assert.assertEquals(property4.name, "birthDate");
         Assert.assertEquals(property4.defaultValue, "undefined");
@@ -194,18 +194,18 @@ public class TypeScriptFetchModelTest {
     }
 
     @Test(description = "test enum array model")
-    public void enumArrayMdoelTest() {
+    public void enumArrayModelTest() {
         final Swagger model =  new SwaggerParser().read("src/test/resources/2_0/petstore-with-fake-endpoints-models-for-testing.yaml");
         final DefaultCodegen codegen = new TypeScriptFetchClientCodegen();
         final Model definition = model.getDefinitions().get("EnumArrays");
 
         Property property =  definition.getProperties().get("array_enum");
-        CodegenProperty prope = codegen.fromProperty("array_enum", property);
-        codegen.updateCodegenPropertyEnum(prope);
-        Assert.assertEquals(prope.datatypeWithEnum, "Array<ArrayEnumEnum>");
-        Assert.assertEquals(prope.enumName, "ArrayEnumEnum");
-        Assert.assertTrue(prope.isEnum);
-        Assert.assertEquals(prope.allowableValues.get("values"), Arrays.asList("fish", "crab"));
+        CodegenProperty prop = codegen.fromProperty("array_enum", property);
+        codegen.updateCodegenPropertyEnum(prop);
+        Assert.assertEquals(prop.datatypeWithEnum, "Array<ArrayEnumEnum>");
+        Assert.assertEquals(prop.enumName, "ArrayEnumEnum");
+        Assert.assertTrue(prop.isEnum);
+        Assert.assertEquals(prop.allowableValues.get("values"), Arrays.asList("fish", "crab"));
 
         HashMap<String, String> fish= new HashMap<String, String>();
         fish.put("name", "Fish");
@@ -213,14 +213,14 @@ public class TypeScriptFetchModelTest {
         HashMap<String, String> crab= new HashMap<String, String>();
         crab.put("name", "Crab");
         crab.put("value", "'crab'");
-        Assert.assertEquals(prope.allowableValues.get("enumVars"), Arrays.asList(fish, crab));
+        Assert.assertEquals(prop.allowableValues.get("enumVars"), Arrays.asList(fish, crab));
 
         // assert inner items
-        Assert.assertEquals(prope.datatypeWithEnum, "Array<ArrayEnumEnum>");
-        Assert.assertEquals(prope.enumName, "ArrayEnumEnum");
-        Assert.assertTrue(prope.items.isEnum);
-        Assert.assertEquals(prope.items.allowableValues.get("values"), Arrays.asList("fish", "crab"));
-        Assert.assertEquals(prope.items.allowableValues.get("enumVars"), Arrays.asList(fish, crab));
+        Assert.assertEquals(prop.datatypeWithEnum, "Array<ArrayEnumEnum>");
+        Assert.assertEquals(prop.enumName, "ArrayEnumEnum");
+        Assert.assertTrue(prop.items.isEnum);
+        Assert.assertEquals(prop.items.allowableValues.get("values"), Arrays.asList("fish", "crab"));
+        Assert.assertEquals(prop.items.allowableValues.get("enumVars"), Arrays.asList(fish, crab));
 
         //IMPORTANT: these are not final enum values, which may be further updated
         //by postProcessModels
@@ -228,20 +228,20 @@ public class TypeScriptFetchModelTest {
     }
 
     @Test(description = "test enum model for values (numeric, string, etc)")
-    public void enumMdoelValueTest() {
+    public void enumModelValueTest() {
         final Swagger model =  new SwaggerParser().read("src/test/resources/2_0/petstore-with-fake-endpoints-models-for-testing.yaml");
         final DefaultCodegen codegen = new TypeScriptFetchClientCodegen();
         final Model definition = model.getDefinitions().get("Enum_Test");
 
         Property property =  definition.getProperties().get("enum_integer");
-        CodegenProperty prope = codegen.fromProperty("enum_integer", property);
-        codegen.updateCodegenPropertyEnum(prope);
-        Assert.assertEquals(prope.datatypeWithEnum, "EnumIntegerEnum");
-        Assert.assertEquals(prope.enumName, "EnumIntegerEnum");
-        Assert.assertTrue(prope.isEnum);
-        Assert.assertFalse(prope.isContainer);
-        Assert.assertNull(prope.items);
-        Assert.assertEquals(prope.allowableValues.get("values"), Arrays.asList(1, -1));
+        CodegenProperty prop = codegen.fromProperty("enum_integer", property);
+        codegen.updateCodegenPropertyEnum(prop);
+        Assert.assertEquals(prop.datatypeWithEnum, "EnumIntegerEnum");
+        Assert.assertEquals(prop.enumName, "EnumIntegerEnum");
+        Assert.assertTrue(prop.isEnum);
+        Assert.assertFalse(prop.isContainer);
+        Assert.assertNull(prop.items);
+        Assert.assertEquals(prop.allowableValues.get("values"), Arrays.asList(1, -1));
 
         HashMap<String, String> one = new HashMap<String, String>();
         one.put("name", "NUMBER_1");
@@ -249,7 +249,7 @@ public class TypeScriptFetchModelTest {
         HashMap<String, String> minusOne = new HashMap<String, String>();
         minusOne.put("name", "NUMBER_MINUS_1");
         minusOne.put("value", "-1");
-        Assert.assertEquals(prope.allowableValues.get("enumVars"), Arrays.asList(one, minusOne));
+        Assert.assertEquals(prop.allowableValues.get("enumVars"), Arrays.asList(one, minusOne));
 
        //IMPORTANT: these are not final enum values, which may be further updated
        //by postProcessModels
