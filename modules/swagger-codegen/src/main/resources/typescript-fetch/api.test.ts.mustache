@@ -1,0 +1,55 @@
+// Set the GCP environment
+import * as fetchMock from 'fetch-mock';
+import {MockOptions} from 'fetch-mock';
+import {Pet, PetApi, PetApiFactory} from '../api';
+import {Configuration} from '../configuration';
+
+// Above variables must be defined before loading this
+const chai = require('chai');
+const chaiAsPromised = require('chai-as-promised');
+
+chai.use(chaiAsPromised);
+
+// Then either:
+const expect = chai.expect;
+chai.should();
+
+describe('Pet API Factory', function () {
+
+  const testBasePath = 'http://test-base-path.com/test';
+  // TODO dynamically rename these
+  const petId = 10;
+  const getPetApiEndpoint = 'http://test-base-path.com/test/pet/10';
+
+  const testPet: Pet = {
+    id: petId,
+    name: 'test-pet-name',
+    photoUrls: [],
+  };
+
+  beforeEach(() => {
+    fetchMock.getOnce(getPetApiEndpoint, {
+      status: 200,
+      body: testPet,
+    });
+  });
+
+  afterEach(() => {
+    fetchMock.resetBehavior();
+    fetchMock.resetHistory();
+  });
+
+
+  it('Sets expected headers on Get Pets call', async () => {
+    const config = {
+      username: 'test-username',
+      password: 'test-password',
+    } as Configuration;
+
+    const petApi = PetApiFactory(config, fetch, testBasePath);
+    const petResult = await petApi.getPetById(petId);
+
+    expect(petResult).to.be.deep.equal(testPet);
+    expect(fetchMock.calls(getPetApiEndpoint).length).to.be.equal(1);
+  });
+});

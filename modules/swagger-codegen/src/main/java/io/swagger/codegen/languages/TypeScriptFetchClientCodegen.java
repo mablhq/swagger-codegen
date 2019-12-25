@@ -102,6 +102,8 @@ public class TypeScriptFetchClientCodegen extends AbstractTypeScriptClientCodege
         supportingFiles.add(new SupportingFile("README.mustache", "", "README.md"));
         supportingFiles.add(new SupportingFile("package.mustache", "", "package.json"));
         supportingFiles.add(new SupportingFile("tsconfig.mustache", "", "tsconfig.json"));
+        supportingFiles.add(new SupportingFile("jest.config.js.mustache", "", "jest.config.js"));
+        supportingFiles.add(new SupportingFile("api.test.ts.mustache", "test", "api.test.ts"));
     }
 
     @Override
