@@ -207,10 +207,10 @@ public class TypeScriptFetchModelTest {
         Assert.assertTrue(prop.isEnum);
         Assert.assertEquals(prop.allowableValues.get("values"), Arrays.asList("fish", "crab"));
 
-        HashMap<String, String> fish= new HashMap<String, String>();
+        HashMap<String, String> fish= new HashMap<>();
         fish.put("name", "Fish");
         fish.put("value", "'fish'");
-        HashMap<String, String> crab= new HashMap<String, String>();
+        HashMap<String, String> crab= new HashMap<>();
         crab.put("name", "Crab");
         crab.put("value", "'crab'");
         Assert.assertEquals(prop.allowableValues.get("enumVars"), Arrays.asList(fish, crab));
@@ -243,10 +243,10 @@ public class TypeScriptFetchModelTest {
         Assert.assertNull(prop.items);
         Assert.assertEquals(prop.allowableValues.get("values"), Arrays.asList(1, -1));
 
-        HashMap<String, String> one = new HashMap<String, String>();
+        HashMap<String, String> one = new HashMap<>();
         one.put("name", "NUMBER_1");
         one.put("value", "1");
-        HashMap<String, String> minusOne = new HashMap<String, String>();
+        HashMap<String, String> minusOne = new HashMap<>();
         minusOne.put("name", "NUMBER_MINUS_1");
         minusOne.put("value", "-1");
         Assert.assertEquals(prop.allowableValues.get("enumVars"), Arrays.asList(one, minusOne));

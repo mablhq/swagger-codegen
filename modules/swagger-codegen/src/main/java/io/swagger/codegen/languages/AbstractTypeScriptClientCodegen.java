@@ -68,13 +68,13 @@ public abstract class AbstractTypeScriptClientCodegen extends DefaultCodegen imp
                 "Map"
                 ));
 
-        languageGenericTypes = new HashSet<String>(Arrays.asList(
+        languageGenericTypes = new HashSet<>(Collections.singletonList(
                 "Array"
         ));
 
         instantiationTypes.put("array", "Array");
 
-        typeMapping = new HashMap<String, String>();
+        typeMapping = new HashMap<>();
         typeMapping.put("Array", "Array");
         typeMapping.put("array", "Array");
         typeMapping.put("List", "Array");
@@ -157,7 +157,7 @@ public abstract class AbstractTypeScriptClientCodegen extends DefaultCodegen imp
             name = "_u";
         }
 
-        // if it's all uppper case, do nothing
+        // if it's all upper case, do nothing
         if (name.matches("^[A-Z_]*$")) {
             return name;
         }
@@ -254,25 +254,25 @@ public abstract class AbstractTypeScriptClientCodegen extends DefaultCodegen imp
             // Handle integer enums
             IntegerProperty sp = (IntegerProperty) p;
             if (sp.getEnum() != null) {
-                return numericEnumValuesToEnumTypeUnion(new ArrayList<Number>(sp.getEnum()));
+                return numericEnumValuesToEnumTypeUnion(new ArrayList<>(sp.getEnum()));
             }
         } else if (p instanceof LongProperty) {
             // Handle long enums
             LongProperty sp = (LongProperty) p;
             if (sp.getEnum() != null) {
-                return numericEnumValuesToEnumTypeUnion(new ArrayList<Number>(sp.getEnum()));
+                return numericEnumValuesToEnumTypeUnion(new ArrayList<>(sp.getEnum()));
             }
         } else if (p instanceof DoubleProperty) {
             // Handle double enums
             DoubleProperty sp = (DoubleProperty) p;
             if (sp.getEnum() != null) {
-                return numericEnumValuesToEnumTypeUnion(new ArrayList<Number>(sp.getEnum()));
+                return numericEnumValuesToEnumTypeUnion(new ArrayList<>(sp.getEnum()));
             }
         } else if (p instanceof FloatProperty) {
             // Handle float enums
             FloatProperty sp = (FloatProperty) p;
             if (sp.getEnum() != null) {
-                return numericEnumValuesToEnumTypeUnion(new ArrayList<Number>(sp.getEnum()));
+                return numericEnumValuesToEnumTypeUnion(new ArrayList<>(sp.getEnum()));
             }
         } else if (p instanceof DateProperty) {
             // Handle date enums
@@ -296,7 +296,7 @@ public abstract class AbstractTypeScriptClientCodegen extends DefaultCodegen imp
      *
      * @param values list of allowed enum values
      * @param dataType either "string" or "number"
-     * @return
+     * @return literal union string
      */
     protected String enumValuesToEnumTypeUnion(List<String> values, String dataType) {
         StringBuilder b = new StringBuilder();
@@ -305,7 +305,7 @@ public abstract class AbstractTypeScriptClientCodegen extends DefaultCodegen imp
             if (!isFirst) {
                 b.append(" | ");
             }
-            b.append(toEnumValue(value.toString(), dataType));
+            b.append(toEnumValue(value, dataType));
             isFirst = false;
         }
         return b.toString();
@@ -315,8 +315,8 @@ public abstract class AbstractTypeScriptClientCodegen extends DefaultCodegen imp
      * Converts a list of numbers to a literal union for representing enum values as a type.
      * Example output: 3 | 9 | 55
      *
-     * @param values
-     * @return
+     * @param values numeric values
+     * @return numeric value list as string literal
      */
     protected String numericEnumValuesToEnumTypeUnion(List<Number> values) {
         List<String> stringValues = new ArrayList<>();
@@ -372,7 +372,7 @@ public abstract class AbstractTypeScriptClientCodegen extends DefaultCodegen imp
     @Override
     public String getSwaggerType(Property p) {
         String swaggerType = super.getSwaggerType(p);
-        String type = null;
+        String type;
         if (typeMapping.containsKey(swaggerType)) {
             type = typeMapping.get(swaggerType);
             if (languageSpecificPrimitives.contains(type))
@@ -431,7 +431,7 @@ public abstract class AbstractTypeScriptClientCodegen extends DefaultCodegen imp
         if ("number".equals(datatype)) {
             return value;
         } else {
-            return "\'" + escapeText(value) + "\'";
+            return "'" + escapeText(value) + "'";
         }
     }
 
@@ -495,7 +495,7 @@ public abstract class AbstractTypeScriptClientCodegen extends DefaultCodegen imp
         for (Object _mo : models) {
             Map<String, Object> mo = (Map<String, Object>) _mo;
             CodegenModel cm = (CodegenModel) mo.get("model");
-            cm.imports = new TreeSet(cm.imports);
+            cm.imports = new TreeSet<>(cm.imports);
             // name enum with model name, e.g. StatusEnum => Pet.StatusEnum
             for (CodegenProperty var : cm.vars) {
                 if (Boolean.TRUE.equals(var.isEnum)) {
@@ -510,7 +510,7 @@ public abstract class AbstractTypeScriptClientCodegen extends DefaultCodegen imp
                     }
                 }
             }
-        } 
+        }
 
         return objs;
     }
