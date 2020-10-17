@@ -1,5 +1,12 @@
 package io.swagger.codegen.languages;
 
+import com.google.common.collect.ImmutableMap;
+import com.samskivert.mustache.Mustache;
+import io.swagger.codegen.mustache.CamelCaseLambda;
+import io.swagger.codegen.mustache.IndentedLambda;
+import io.swagger.codegen.mustache.LowercaseLambda;
+import io.swagger.codegen.mustache.TitlecaseLambda;
+import io.swagger.codegen.mustache.UppercaseLambda;
 import io.swagger.models.parameters.Parameter;
 import org.apache.commons.lang3.StringUtils;
 
@@ -116,6 +123,32 @@ public abstract class AbstractTypeScriptClientCodegen extends DefaultCodegen imp
         if (additionalProperties.containsKey(CodegenConstants.SUPPORTS_ES6)) {
             setSupportsES6(Boolean.valueOf(additionalProperties.get(CodegenConstants.SUPPORTS_ES6).toString()));
             additionalProperties.put("supportsES6", getSupportsES6());
+        }
+
+        addMustacheLambdas(additionalProperties);
+    }
+
+    private void addMustacheLambdas(Map<String, Object> objs) {
+
+        Map<String, Mustache.Lambda> lambdas = new ImmutableMap.Builder<String, Mustache.Lambda>()
+                .put("lowercase", new LowercaseLambda().generator(this))
+                .put("uppercase", new UppercaseLambda())
+                .put("titlecase", new TitlecaseLambda())
+                .put("camelcase", new CamelCaseLambda().generator(this))
+                .put("camelcase_param", new CamelCaseLambda().generator(this).escapeAsParamName(true))
+                .put("indented", new IndentedLambda())
+                .put("indented_8", new IndentedLambda(8, " "))
+                .put("indented_12", new IndentedLambda(12, " "))
+                .put("indented_16", new IndentedLambda(16, " "))
+                .build();
+
+        if (objs.containsKey("lambda")) {
+            LOGGER.warn("An property named 'lambda' already exists. Mustache lambdas renamed from 'lambda' to '_lambda'. " +
+                    "You'll likely need to use a custom template, " +
+                    "see https://github.com/swagger-api/swagger-codegen#modifying-the-client-library-format. ");
+            objs.put("_lambda", lambdas);
+        } else {
+            objs.put("lambda", lambdas);
         }
     }
 
